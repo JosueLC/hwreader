@@ -97,10 +97,13 @@ class Slot:
         return out
 
     def _set_new_signals_range(self, rangeId, signals):
-        pass
+        self._address[rangeId] = signals
 
     def _create_new_io_range(self, line):
-        pass
+        typeIO = re.findall(self.is_TypeAddress, line)[0]
+        range_list = [key for key, value in self._address if typeIO in key.lower()]
+
+
 
     def _get_typeAddress(self, params):
         pass
