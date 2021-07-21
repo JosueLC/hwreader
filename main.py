@@ -57,7 +57,11 @@ def main():
 
     logger.info("Opening file: {}.".format(args.filename))
     file_to_read = open(args.filename,'r')
-    lines = file_to_read.readlines()
+    try:
+        lines = file_to_read.readlines()
+    except UnicodeDecodeError as ude:
+        lines = ""
+        print(f'has occurred an error: {ude}')
     
     tree = create_hw_tree(lines)
     file_to_read.close()
@@ -70,8 +74,8 @@ def main():
         for addr in data_sys:
             data.append(addr)
 
-    columns = ['id_red', 'dir_profibus','nombre_equipo','#Slot','nombre', 'type','dir_inicial', 'par1', 'par2', 'par3', 'par4', 'par5']
-    df = pd.DataFrame(data=data, columns=columns)
+    df = pd.DataFrame(data=data)
+    df = df[['red', 'dir_profibus','nombre_equipo','ref_equipo','slot_modulo','ref_modulo','nombre_modulo','dir', 'tag','descripcion','tipo','rango']]
 
     output_file_name =  os.path.dirname(os.path.abspath(args.filename)) + "/HW_results.csv"
     logger.info("Writing hardware description in {} file.".format(output_file_name))

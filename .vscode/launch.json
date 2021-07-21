@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/main.py",
             "console": "integratedTerminal",
-            "args": ["../molinos/plc molinos_original.cfg"]
+            "args": ["../clarificacion/plc_clarificacion.cfg"]
         }
     ]
 }

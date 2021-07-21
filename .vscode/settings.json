@@ -1,5 +1,5 @@
 {
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
-    "python.pythonPath": "/home/josuefarleylopez/Documentos/IPSA/Listados/HWReader/hw_venv/bin/python3.9"
+    "python.pythonPath": "hw_venv/bin/python"
 }

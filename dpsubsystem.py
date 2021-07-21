@@ -19,6 +19,7 @@ class DPSubsystem:
         for slave in self._slaves:
             data_slave = self._slaves[slave].description
             for addr in data_slave:
+                addr['red'] = self._name
                 data.append(addr)
         return data
 

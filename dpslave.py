@@ -24,7 +24,8 @@ class DPSlave:
         for slot in self._slots:
             data_slot = self._slots[slot].description
             for addr in data_slot:
-                addr[2] = self._name
+                addr['nombre_equipo'] = self._name
+                addr['ref_equipo'] = self._reference
                 data.append(addr)
         return data
 
