@@ -1,16 +1,37 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
     "configurations": [
+        
         {
-            "name": "Python: Current File",
+            "name": "Python: Run Project",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/main.py",
+            "program": "main.py",
             "console": "integratedTerminal",
-            "args": ["../clarificacion/plc_clarificacion.cfg"]
+            "preLaunchTask": "pip_list"
+        },
+        {
+            "name": "Evaporadores",
+            "type": "python",
+            "request": "launch",
+            "program": "main.py",
+            "args": ["/home/josuefarleylopez/Documents/PLCs/evap/plc evaporadores-20210823.cfg"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Clarificacion",
+            "type": "python",
+            "request": "launch",
+            "program": "main.py",
+            "args": ["/home/josuefarleylopez/Documents/PLCs/clarif/plc_clarificacion-20210823.cfg"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Elaboracion",
+            "type": "python",
+            "request": "launch",
+            "program": "main.py",
+            "args": ["/home/josuefarleylopez/Documents/PLCs/elab/plc elab2.cfg"],
+            "console": "integratedTerminal"
         }
     ]
 }

@@ -1,13 +1,16 @@
 import re
 from slot import Slot
 
-class DPSlave:
+class DPSlave():
+    is_Comment = r'( COMMENT )'
+
     def __init__(self, text):
         [subId, id, ref, name] = self._get_attr(text[0].rstrip())
         self._subsystem_id = subId
         self._id = id
         self._reference = ref
         self._name = name
+        self._comment = self._get_comment(text)
         self._slots = {}
 
     @property
@@ -26,6 +29,7 @@ class DPSlave:
             for addr in data_slot:
                 addr['nombre_equipo'] = self._name
                 addr['ref_equipo'] = self._reference
+                addr['comentario'] = self._comment
                 data.append(addr)
         return data
 
@@ -39,6 +43,15 @@ class DPSlave:
         ref = items[2]
         name = items[3]
         return [subId, id, ref, name]
+    
+    def _get_comment(self,text):
+        for line in text:
+            m= re.search(self.is_Comment, line)
+            if m is not None:
+                t = re.findall(r'\"(.+?)\"',line)
+                if len(t) > 0:
+                    return t[0]
+        return ""
 
     def set_new_slot(self, slot):
         self._slots[slot.get_id] = slot

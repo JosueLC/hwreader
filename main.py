@@ -5,7 +5,7 @@ from dpslave import DPSlave
 from slot import Slot
 import re
 import logging
-import pandas as pd
+import openpyxl
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -74,12 +74,50 @@ def main():
         for addr in data_sys:
             data.append(addr)
 
-    df = pd.DataFrame(data=data)
-    df = df[['red', 'dir_profibus','nombre_equipo','ref_equipo','slot_modulo','ref_modulo','nombre_modulo','dir', 'tag','descripcion','tipo','rango']]
+    #get directory from args.filename
+    directory = os.path.dirname(args.filename)
+    #create a new file with the same name but with .xlsx extension
+    new_file = os.path.join(directory, os.path.splitext(os.path.basename(args.filename))[0] + ".xlsx")
+    #Fill openpyxl file with the data
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Simatic"
+    #Find dictionary most long in data
+    max_len = 0
+    max_index = 0
+    for i in data:
+        if len(i) > max_len:
+            max_len = len(i)
+            max_index = i
+    #Get columns titles from the most long dictionary
+    columns = list(max_index.keys())
+    #Add columns titles to the first row
+    for i in range(len(columns)):
+        ws.cell(row=1, column=i+1, value=columns[i])
+    #Fill the rest of the file with the data using the columns titles as keys. if key is not in dictionary, add empty string
+    for i in range(len(data)):
+        for j in range(len(columns)):
+            if columns[j] in data[i]:
+                #Remove line breaks from the string
+                ws.cell(row=i+2, column=j+1, value=data[i][columns[j]].replace('\n', ' '))
+            else:
+                ws.cell(row=i+2, column=j+1, value="")    
+        
+    #Save the file
+    wb.save(new_file)
+    logger.info("File saved as {}.".format(new_file))
 
-    output_file_name =  os.path.dirname(os.path.abspath(args.filename)) + "/HW_results.csv"
-    logger.info("Writing hardware description in {} file.".format(output_file_name))
-    df.to_csv(output_file_name, index=False)
+    
+    
+
+
+
+    # df = pd.DataFrame(data=data)
+    # df = df[['red', 'dir_profibus','nombre_equipo','ref_equipo','comentario','slot_modulo','ref_modulo','nombre_modulo','dir', 'tag','descripcion','tipo','rango']]
+
+    # output_file_name =  os.path.dirname(os.path.abspath(args.filename)) + "/HW_results.csv"
+    # logger.info("Writing hardware description in {} file.".format(output_file_name))
+    # df.to_csv(output_file_name, index=False)
 
 if __name__ == "__main__":
     main()

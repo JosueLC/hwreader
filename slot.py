@@ -1,6 +1,6 @@
 import re
 class Slot:
-
+    #Regular expression for slot
     is_TypeAddress = r'^LOCAL_(.+?)_ADDRESSES.*$'
     is_Address = r' +ADDRESS +\d+,.*$'
     values_addr = r'(\d+)'
