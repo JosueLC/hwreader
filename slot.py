@@ -17,6 +17,8 @@ class Slot:
         self._reference = ref
         self._name = name
         self._address = {}
+        if ('5987' in subId):
+            print('.')
         self._generate_signals(text[2:])
         self._get_symbols(text[2:])
         self._get_parameters(text[2:])
@@ -36,16 +38,26 @@ class Slot:
     @property
     def description(self):
         info = list()
-        base = {'red': self._subsystem_id,
+        base = {'red': self._subsystem_id.replace('"',''),
                 'dir_profibus': self._slave_id,
                 'slot_modulo': self._id,
-                'ref_modulo': self._reference,
-                'nombre_modulo': self._name
+                'ref_modulo': self._reference.replace('"',''),
+                'nombre_modulo': self._name.replace('"','')
                 }
         for range_id in self._address:
             for io_dir in self._address[range_id]:
                 info.append(base | self._address[range_id][io_dir])    
         return info
+    
+    @property
+    def details(self):
+        base = {'red': self._subsystem_id,
+                'dir_profibus': self._slave_id,
+                'slot_modulo': self._id,
+                'ref_modulo': self._reference,
+                'nombre_modulo': self._name
+                }   
+        return [base]
     
     def _get_attr(self, text_):
         items = text_.split(', ')
@@ -152,9 +164,9 @@ class Slot:
             data_output = ["NA",0,0,0,0]
         #IOs
         elif typePar2 == 32:
-            data_output = ["WORD", byteInit, bitInit, quantity//2,1]
+            data_output = ["WORD", byteInit, bitInit, quantity//2,2]
         elif typePar2 == 16:
-            data_output = ["BOOL", byteInit, bitInit, quantity,1]
+            data_output = ["BOOL", byteInit, bitInit, quantity*8,1]
         elif typePar2 == 0:
             ref = re.findall(r'6ES7 (3\d\d)-.*', self._reference)
             if len(ref) > 0:
@@ -168,13 +180,16 @@ class Slot:
         return data_output
     
     def _get_symbols(self,text):
-        for line in text:
-            if self._check_is_Symbol(line):
-                data = line.split(", ")
-                rangeAdd = (data[0].replace(" ","-")).split("-")[2]
-                rangeAdd="IN0" if rangeAdd == "I" else "OUT0"
-                self._address[rangeAdd][data[1]]['tag'] = data[2].replace('"','')
-                self._address[rangeAdd][data[1]]['descripcion'] = data[3].replace('"','')
+        try:
+            for line in text:
+                if self._check_is_Symbol(line):
+                    data = line.split(", ")
+                    rangeAdd = (data[0].replace(" ","-")).split("-")[2]
+                    rangeAdd="IN0" if rangeAdd == "I" else "OUT0"
+                    self._address[rangeAdd][data[1]]['tag'] = data[2].replace('"','')
+                    self._address[rangeAdd][data[1]]['descripcion'] = data[3].replace('"','')
+        except Exception as e:
+            self._address[rangeAdd] = {}
 
     def _get_parameters(self,text):
         for line in text:

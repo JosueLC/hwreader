@@ -24,12 +24,13 @@ class DPSlave():
     @property
     def description(self):
         data = list()
+        #primera linea para el equipo, las siguientes para los slots
         for slot in self._slots:
             data_slot = self._slots[slot].description
             for addr in data_slot:
-                addr['nombre_equipo'] = self._name
-                addr['ref_equipo'] = self._reference
-                addr['comentario'] = self._comment
+                addr['nombre_equipo'] = self._name.replace('"','')
+                addr['ref_equipo'] = self._reference.replace('"','')
+                addr['comentario'] = self._comment.replace('"','')
                 data.append(addr)
         return data
 
